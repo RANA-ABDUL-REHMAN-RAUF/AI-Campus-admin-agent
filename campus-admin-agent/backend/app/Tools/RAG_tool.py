@@ -26,7 +26,7 @@ client = AsyncOpenAI(
 # -------------------------
 # 3. RAG Setup
 # -------------------------
-DATA_PATH = "backend\data\smit.txt"
+DATA_PATH = "backend/app/Tools/data/SMIT.txt"
 if not os.path.exists(DATA_PATH):
     raise FileNotFoundError(f"Missing {DATA_PATH}")
 

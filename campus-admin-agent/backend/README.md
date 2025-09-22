@@ -1,67 +1,87 @@
-# backend/README.md
+# Campus Administration Agent — Backend
 
-# Campus Administration Agent - Backend
-
-This is the backend component of the Campus Administration Agent project, built using FastAPI. This application serves as the server-side logic for managing campus administration tasks.
+A FastAPI-based backend for the Campus AI Admin Agent. It exposes REST endpoints that orchestrate specialized AI agents, manage student records, and provide campus analytics.
 
 ## Project Structure
 
-- `app/`: Contains the main application code.
-  - `main.py`: Entry point of the FastAPI application.
-  - `api/`: Contains the API routes.
-    - `routes.py`: Defines the API endpoints and links them to service methods.
-  - `models/`: Contains data models for request validation and response serialization.
-    - `models.py`: Defines the data models using Pydantic.
-  - `services/`: Contains business logic and data processing functions.
-    - `service.py`: Implements the core functionality of the application.
-  - `utils/`: Contains utility functions for common tasks.
-    - `helpers.py`: Provides helper functions used throughout the application.
+- `app/`
+  - `main.py` — FastAPI entrypoint, CORS, and router registration
+  - `api/routes.py` — Public API endpoints (chat, streaming, students, analytics)
+  - `agent/agent.py` — AI agents configuration and orchestration
+  - `models/models.py` — SQLAlchemy ORM models and DB session setup
+  - `services/service.py` — Placeholder for domain/business logic
+  - `Tools/` — Function tools invoked by agents
+    - `Campus_analytics_tools.py`
+    - `FAQ_tools.py`
+    - `RAG_tool.py`
+    - `student _manegement_tool_.py`
+    - `data/SMIT.txt`
+  - `utils/pydentic_model.py` — Pydantic request/response models and helpers
+
+## Prerequisites
+
+- Python 3.8+
+- A virtual environment tool (venv, uv, or similar)
 
 ## Installation
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   cd campus-admin-agent/backend
-   ```
-
-2. Create a virtual environment:
-   ```
-   python -m venv venv
-   ```
-
-3. Activate the virtual environment:
-   - On Windows:
-     ```
-     venv\Scripts\activate
-     ```
-   - On macOS/Linux:
-     ```
-     source venv/bin/activate
-     ```
-
-4. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-
-## Running the Application
-
-To start the FastAPI application, run the following command:
-```
-uvicorn app.main:app --reload
+Using pip and venv:
+```bash
+cd campus-admin-agent/backend
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+pip install fastapi uvicorn sqlalchemy pydantic python-dotenv agents openai
 ```
 
-The application will be accessible at `http://127.0.0.1:8000`.
+Using uv (optional, recommended):
+```powershell
+cd campus-admin-agent\backend
+uv add fastapi uvicorn sqlalchemy pydantic python-dotenv agents openai
+```
 
-## API Documentation
+## Configuration
 
-The automatically generated API documentation can be found at `http://127.0.0.1:8000/docs`.
+Create a `.env` file in `backend/` with your database connection string. The backend recognizes any of the following (checked in this order):
+
+```env
+# Preferred
+DATABASE-URI=sqlite:///./campus_admin.db
+# Alternatives
+# DATABASE_URI=sqlite:///./campus_admin.db
+# DATABASE_URL=sqlite:///./campus_admin.db
+
+# Optional AI keys if you plan to use agent features
+GEMINI_API_KEY=your_key
+OPENAI_API_KEY=your_key
+```
+
+## Initialize the Database (SQLite example)
+
+```powershell
+# PowerShell (handles the hyphen in the var name)
+[Environment]::SetEnvironmentVariable("DATABASE-URI","sqlite:///./campus_admin.db","Process")
+uv run python app\models\models.py
+```
+
+## Run the API
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# or with uv
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+- API root: http://localhost:8000
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+Pull requests are welcome. Please add tests where appropriate and keep documentation up to date.
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+MIT — see the root `LICENSE`.

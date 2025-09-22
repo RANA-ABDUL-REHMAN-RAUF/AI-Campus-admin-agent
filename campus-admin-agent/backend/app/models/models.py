@@ -6,10 +6,15 @@ import os
 from datetime import datetime
 
 load_dotenv()  # Load environment variables from a .env file
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Accept multiple env var names: DATABASE-URI (preferred), DATABASE_URI, DATABASE_URL
+DATABASE_URL = (
+    os.getenv("DATABASE-URI")
+    or os.getenv("DATABASE_URI")
+    or os.getenv("DATABASE_URL")
+)
 
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL environment variable is not set")
+    raise ValueError("Database URL not set. Define DATABASE-URI, DATABASE_URI, or DATABASE_URL in .env")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

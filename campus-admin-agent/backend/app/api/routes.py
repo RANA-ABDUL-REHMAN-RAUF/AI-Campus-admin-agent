@@ -1,4 +1,13 @@
 from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
+from agents import Runner
+from openai.types.responses import ResponseTextDeltaEvent
+from app.agent.agent import handoff_agent, student_management_agent, campus_analytics_agent
+
+
+class ChatRequest(BaseModel):
+    query: str
 
 router = APIRouter()
 @router.post("/chat")

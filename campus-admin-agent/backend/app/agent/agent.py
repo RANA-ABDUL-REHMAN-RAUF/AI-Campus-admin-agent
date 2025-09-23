@@ -7,11 +7,15 @@ from dotenv import load_dotenv
 import asyncio
 
 # Import all the function tools
-from backend.tools import (
-    add_student, get_student, update_student, delete_student, list_students,
+from ..Tools.Campus_analytics_tools import (
     get_total_students, get_students_by_department, get_recent_onboarded_students,
-    get_active_students_last_7_days, get_cafeteria_timings, get_library_hours, get_lunch_timing, 
-    # retrieve_info
+    get_active_students_last_7_days
+)
+from ..Tools.student_management_tool import (
+    add_student, get_student, update_student, delete_student, list_students
+)
+from ..Tools.FAQ_tools import (
+    get_cafeteria_timings, get_library_hours, get_lunch_timing
 )
 
 load_dotenv()
@@ -163,44 +167,44 @@ Your goal is to ensure the user gets the most accurate and relevant information 
     handoffs=[student_management_agent, campus_analytics_agent, campus_info_agent],
 )
 
-# # ================= Main Function with Enhancements ==================
-# # Added error handling in the loop, improved UI prompts, and a welcome message.
-# async def main():
-#     print("🏫 Welcome to Saylani Mass IT Training (S.M.I.T.) Admin Assistant")
-#     print("=" * 60)
-#     print("I can help with:")
-#     print("• Student Management: Add, retrieve, update, delete, or list student records")
-#     print("• Analytics: Student counts, department distributions, recent onboardings, activity tracking")
-#     print("• Campus Info: Cafeteria timings, library hours, S.M.I.T. program details")
-#     print("=" * 60)
+# ================= Main Function with Enhancements ==================
+# Added error handling in the loop, improved UI prompts, and a welcome message.
+async def main():
+    print("🏫 Welcome to Saylani Mass IT Training (S.M.I.T.) Admin Assistant")
+    print("=" * 60)
+    print("I can help with:")
+    print("• Student Management: Add, retrieve, update, delete, or list student records")
+    print("• Analytics: Student counts, department distributions, recent onboardings, activity tracking")
+    print("• Campus Info: Cafeteria timings, library hours, S.M.I.T. program details")
+    print("=" * 60)
     
-#     while True:
-#         try:
-#             query = input("\n💬 Enter your query (or 'quit' to exit): ").strip()
-#             if query.lower() in ['quit', 'exit', 'q']:
-#                 print("👋 Goodbye!")
-#                 break
+    while True:
+        try:
+            query = input("\n💬 Enter your query (or 'quit' to exit): ").strip()
+            if query.lower() in ['quit', 'exit', 'q']:
+                print("👋 Goodbye!")
+                break
                 
-#             if not query:
-#                 print("Please enter a valid query.")
-#                 continue
+            if not query:
+                print("Please enter a valid query.")
+                continue
             
-#             print("\n🤖 Assistant:")
-#             try:
-#                 result = Runner.run_streamed(handoff_agent, input=query)
-#                 async for event in result.stream_events():
-#                     if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
-#                         print(event.data.delta, end="", flush=True)
-#                 print()  # Add newline after response
-#             except Exception as e:
-#                 print(f"⚠️ An error occurred: {str(e)}")
-#                 print("Please try again or rephrase your query.")
-#         except (EOFError, KeyboardInterrupt):
-#             print("\n👋 Goodbye!")
-#             break
-#         except Exception as e:
-#             print(f"\n⚠️ Unexpected error: {str(e)}")
-#             print("Please try again.")
+            print("\n🤖 Assistant:")
+            try:
+                result = Runner.run_streamed(handoff_agent, input=query)
+                async for event in result.stream_events():
+                    if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
+                        print(event.data.delta, end="", flush=True)
+                print()  # Add newline after response
+            except Exception as e:
+                print(f"⚠️ An error occurred: {str(e)}")
+                print("Please try again or rephrase your query.")
+        except (EOFError, KeyboardInterrupt):
+            print("\n👋 Goodbye!")
+            break
+        except Exception as e:
+            print(f"\n⚠️ Unexpected error: {str(e)}")
+            print("Please try again.")
 
-# if __name__ == "__main__":
-#     asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
